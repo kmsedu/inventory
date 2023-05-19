@@ -3,10 +3,15 @@
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "target": "ES2020",
-    "outDir": "dist",
+    "outDir": "./bin",
     "strict": true,
     "noImplicitAny": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }
