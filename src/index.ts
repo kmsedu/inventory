@@ -1,10 +1,8 @@
 import express from "express";
-
+import { router } from "../src/router";
 const app = express();
 
-app.all("/*", (req) => {
-  console.log(req.url);
-});
+app.use("/", router);
 
 app.listen(8000, () => {
   console.log("Listening on 8000");
