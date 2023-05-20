@@ -1,18 +1,11 @@
-import * as http from "http";
+import express from "express";
 
-const server: http.Server = http.createServer((req, res) => {
-  console.log("Got Request");
-  printRequest(req, res);
+const app = express();
+
+app.all("/*", (req) => {
+  console.log(req.url);
 });
 
-const printRequest = (req: http.IncomingMessage, res: http.ServerResponse) => {
-  console.log(req.url);
-  res.end(
-    `Server functional, received ${req.method}
-    request at ${new Date().toString()}`
-  );
-};
-
-server.listen(8000, () => {
-  console.log("Listening on port 8000");
+app.listen(8000, () => {
+  console.log("Listening on 8000");
 });
