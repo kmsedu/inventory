@@ -8,8 +8,8 @@ const server: http.Server = http.createServer((req, res) => {
 const printRequest = (req: http.IncomingMessage, res: http.ServerResponse) => {
   console.log(req.url);
   res.end(
-    `Server functional, received ${req.method
-    } request at ${new Date().toString()}`
+    `Server functional, received ${req.method}
+    request at ${new Date().toString()}`
   );
 };
 
