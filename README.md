@@ -6,7 +6,7 @@ _Inventory handling application for an imaginary store_
 
 - [x] Finish scaffolding project
 - [x] Set up schemas/models
-- [ ] Write router
+- [x] Write router
 - [ ] Write controller templates for CRUD
 - [ ] Implement CRUD for each model
 - [ ] Write views
