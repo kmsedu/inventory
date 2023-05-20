@@ -4,7 +4,7 @@ _Inventory handling application for an imaginary store_
 
 # Tasks
 
-- [ ] Finish scaffolding project
+- [x] Finish scaffolding project
 - [ ] Set up schemas/models
 - [ ] Write router
 - [ ] Write controller templates for CRUD

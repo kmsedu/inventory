@@ -4,7 +4,8 @@
   "description": "Inventory handling application for an imaginary store",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",
