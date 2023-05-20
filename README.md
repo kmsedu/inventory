@@ -1,8 +1,8 @@
-# inventory
+# Inventory
 
 _Inventory handling application for an imaginary store_
 
-## Tasks
+# Tasks
 
 - [] Finish scaffolding project
 - [] Set up schemas/models
