@@ -1,4 +1,31 @@
 extends layout
 
 block content 
-  p Hello World!
+  h1 Home page 
+  section.overview 
+    div.overview-items
+      a(href="/items/")
+        h2 Items
+      table 
+        tr 
+          th Name 
+          th Description 
+          th Price 
+        each item of items 
+          tr
+            td
+              a(href="/item/" + item.id)= item.name
+            td= item.description
+            td.price= item.price
+    div.overview-categories
+      a(href="/categories/")
+        h2 Categories
+      table 
+        tr 
+          th Name 
+          th Description
+        each category of categories
+          tr 
+            td
+              a(href="/category/" + category.id)= category.name
+            td= category.description
