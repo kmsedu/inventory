@@ -5,25 +5,14 @@ const prisma = new PrismaClient();
 
 const ItemController = {
   index: async function(req: Request, res: Response, next: NextFunction) {
-    try {
-      const items = await prisma.item.findMany({}).catch((err) => {
-        throw new Error(err);
-      });
-      const categories = await prisma.category.findMany({}).catch((err) => {
-        throw new Error(err);
-      });
+    const items = await prisma.item.findMany({}).catch(next);
+    const categories = await prisma.category.findMany({}).catch(next);
 
-      res.render("index", {
-        title: "Home page",
-        items,
-        categories,
-      });
-    } catch (error) {
-      const err = new Error(error as string);
-
-      err.message = "404 Error";
-      next(err);
-    }
+    res.render("index", {
+      title: "Home page",
+      items,
+      categories,
+    });
   },
   list: async function(req: Request, res: Response, next: NextFunction) {
     res.render("item_list", { title: "Item list" });
