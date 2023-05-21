@@ -8,7 +8,7 @@ _Inventory handling application for an imaginary store_
 - [x] Set up schemas/models
 - [x] Write router
 - [x] Write controller templates for CRUD
-- [ ] Make GET views
+- [x] Make GET views
 - [ ] Implement GET for each model
 - [ ] Write forms for create/update
 - [ ] Implement POST for each model
