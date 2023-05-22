@@ -1,23 +1,18 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { wrap } from "module";
 
 const prisma = new PrismaClient();
 
 const CategoryController = {
   detail: async function(req: Request, res: Response, next: NextFunction) {
-    if (req.params.id === null) {
-      const err = new Error("No ID parameter found in URL");
-      const httpError = { ...err, status: 200 };
-      next(httpError);
-    }
+    const category = await prisma.category
+      .findUnique({
+        where: { id: req.params.id },
+        include: { items: true },
+      })
+      .catch((e) => next(e));
 
-    const category = await prisma.category.findUnique({
-      where: { id: req.params.id },
-      include: { items: true },
-    });
-
-    if (category !== null) {
+    if (category !== null && category) {
       res.render("category_detail", {
         title: category.name,
         category,
@@ -25,9 +20,9 @@ const CategoryController = {
     }
   },
   list: async function(req: Request, res: Response, next: NextFunction) {
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.category.findMany().catch((e) => next(e));
 
-    if (categories.length !== 0) {
+    if (categories !== null && categories) {
       const itemCounts = categories.map((category) => {
         return category.itemIds.length;
       });
@@ -37,13 +32,7 @@ const CategoryController = {
         categories,
         itemCounts,
       });
-      return;
     }
-
-    const err = new Error("Categories not found");
-    const httpError = { ...err, status: 404 };
-
-    next(httpError);
   },
   create: async function(req: Request, res: Response, next: NextFunction) {
     res.render("category_create", { title: "Category create" });
