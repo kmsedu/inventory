@@ -45,19 +45,11 @@ const itemData: Prisma.ItemCreateInput[] = [
       ],
     },
     price: 69,
-    stockItems: {
-      create: [
-        {
-          name: "CSS For Dummies",
-        },
-      ],
-    },
   },
 ];
 
 async function main() {
   console.log("Cleaning DB");
-  await prisma.stockItem.deleteMany({});
   await prisma.item.deleteMany({});
   await prisma.category.deleteMany({});
 

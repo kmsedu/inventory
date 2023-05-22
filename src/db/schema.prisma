@@ -8,14 +8,12 @@ datasource db {
 }
 
 model Item {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  name         String      @unique
-  description  String
-  categories   Category[]  @relation(fields: [categoryIds], references: [id])
-  categoryIds  String[]    @db.ObjectId
-  price        Float
-  stockItems   StockItem[] @relation(fields: [stockItemIds], references: [id])
-  stockItemIds String[]    @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String     @unique
+  description String
+  categories  Category[] @relation(fields: [categoryIds], references: [id])
+  categoryIds String[]   @db.ObjectId
+  price       Float
 }
 
 model Category {
@@ -24,11 +22,4 @@ model Category {
   description String
   items       Item[]   @relation(fields: [itemIds], references: [id])
   itemIds     String[] @db.ObjectId
-}
-
-model StockItem {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  items   Item[]   @relation(fields: [itemIds], references: [id])
-  itemIds String[] @db.ObjectId
 }

@@ -1,4 +1,17 @@
 extends layout 
 
 block content 
-  p Item List
+  h1 Item List
+  table.item_list 
+    tr 
+      th Name 
+      th Description 
+      th Price
+      th ID
+    each item in items 
+      tr 
+        td 
+          a(href="/item/" + item.id)= item.name 
+        td= item.description 
+        td.price= item.price 
+        td= item.id
