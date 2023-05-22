@@ -1,4 +1,13 @@
 extends layout 
 
 block content 
- p Item Detail
+  h1= item.name
+  div.item_container
+    section 
+      p.blurb= item.description
+      p.price= item.price
+    section.display
+      img(src="/images/" + item.id + ".png", alt=item.name, height="auto", width="200px")
+      div.category_container
+        each category in item.categories 
+          a(href="/category/" + category.id)= category.name

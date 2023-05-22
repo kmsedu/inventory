@@ -47,6 +47,10 @@ th {
 th,
 td {
   padding: 0.5rem 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 0px;
 }
 
 td:has(a) {
@@ -58,7 +62,7 @@ td > a {
   padding: 0.5rem 1rem;
 }
 
-td.price::before {
+.price::before {
   content: "$";
 }
 
@@ -69,4 +73,62 @@ nav.sidebar > a {
 nav.sidebar :first-child {
   font-size: 2rem;
   font-weight: bold;
+}
+
+.item_list {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.item_container {
+  display: flex;
+  gap: 2rem;
+}
+
+.item_container :first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+section.display {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  max-width: 260px;
+}
+
+p.price {
+  text-align: right;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+div.category_container {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  max-width: 260px;
+  font-style: italic;
+  gap: 0 0.3rem;
+  text-decoration: underline;
+}
+
+div.category_container a {
+  transition: color 0.1s ease-in-out;
+}
+
+div.category_container a:hover {
+  color: darkslategray;
+}
+
+div.category_container a:not(:last-child):after {
+  content: ",";
+}
+
+p.blurb {
+  max-width: 450px;
+  min-width: 450px;
+  line-height: 1.5;
+  padding: 1rem;
 }
