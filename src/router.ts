@@ -1,6 +1,7 @@
 import express from "express";
 import { ItemController } from "./controllers/item_controller";
 import { CategoryController } from "./controllers/category_controller";
+import { handleErrors } from "./util/handle_errors";
 
 const router = express.Router();
 
@@ -30,5 +31,19 @@ router.get("/category/:id", CategoryController.detail);
 router.post("/category/create", CategoryController.createPost);
 router.post("/category/:id/update", CategoryController.updatePost);
 router.post("/category/:id/delete", CategoryController.deletePost);
+
+// 404 Route
+router.get("/404", (req, res, next) => {
+  const error = new Error("404 Not Found");
+  res.status(404).render("error", {
+    title: "404 Not Found",
+    error,
+  });
+});
+
+router.get("*", (req, res, next) => {
+  const err = new Error("Invalid URL");
+  next(err);
+});
 
 export { router };
