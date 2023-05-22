@@ -1,11 +1,10 @@
-html * {
-  border: 1px solid red;
-}
+/* html * { */
+/*   border: 1px solid red; */
+/* } */
 
 body {
   display: flex;
   font-family: sans-serif;
-  padding: 1rem;
   min-height: 100vh;
 }
 
@@ -19,9 +18,19 @@ nav {
   flex-direction: column;
 }
 
+.sidebar {
+  border-right: 1px solid lightgray;
+}
+
 h1 {
   font-size: 2rem;
   padding: 1rem;
+}
+
+main h2 {
+  background: #333;
+  color: white;
+  border: 1px solid lightgray;
 }
 
 h2 {
@@ -42,6 +51,7 @@ h2 {
 
 th {
   font-weight: bold;
+  background: #eee;
 }
 
 th,
@@ -51,6 +61,7 @@ td {
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 0px;
+  border: 1px solid lightgray;
 }
 
 td:has(a) {
@@ -75,7 +86,7 @@ nav.sidebar :first-child {
   font-weight: bold;
 }
 
-.item_list {
+table {
   table-layout: fixed;
   width: 100%;
 }
