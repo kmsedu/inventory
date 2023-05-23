@@ -7,7 +7,9 @@ function handleErrors(
   res: Response,
   next: NextFunction
 ) {
-  console.log("Using Error Middleware");
+  if (error.code && error.code.includes("PUG")) {
+    res.render("error", { title: "Pug compilation error", error });
+  }
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2023": {
