@@ -3,18 +3,16 @@ import { NextFunction, Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-async function getCategory(
-  categoryList: Prisma.CategoryGetPayload<{ include: { items: true } }>[],
-  searchTerm: string,
-  next: NextFunction
-) {
-  const target = categoryList.find((category) => category.id === searchTerm);
+async function getCategory(id: string, next: NextFunction) {
+  return await prisma.category
+    .findUnique({ where: { id }, include: { items: true } })
+    .catch((e) => next(e));
+}
 
-  if (!target || target === null) {
-    return next(new Error("No category matches this ID"));
-  }
-
-  return target;
+async function getAllCategories(next: NextFunction) {
+  return await prisma.category
+    .findMany({ include: { items: true } })
+    .catch((e) => next(e));
 }
 
 async function getPage(
@@ -31,59 +29,63 @@ async function getPage(
     })
     .catch((e) => next(e));
 
-  switch (pageType) {
-    case "detail": {
-      const category = await getCategory(categories, req.params.id, next).catch(
-        (e) => next(e)
-      );
-      if (category) {
-        res.render("category_detail", { title: category.name, category });
+  if (categories !== null && categories !== undefined) {
+    switch (pageType) {
+      case "detail": {
+        const category = await getCategory(req.params.id, next);
+
+        if (category !== null && category !== undefined) {
+          res.render("category_detail", { title: category.name, category });
+        }
+        break;
       }
-      break;
-    }
-    case "list": {
-      const itemCounts = categories.map((category) => {
-        return category.itemIds.length;
-      });
+      case "list": {
+        const categories = await getAllCategories(next);
 
-      res.render("category_list", {
-        title: "Category List",
-        categories,
-        itemCounts,
-      });
-      break;
-    }
-    case "create": {
-      res.render("category_create", { title: "Category create" });
-      break;
-    }
-    case "update": {
-      const category = await getCategory(categories, req.params.id, next);
-      res.render("category_create", {
-        title: "Category Update",
-        category,
-      });
-      break;
-    }
-    case "delete": {
-      const category = await getCategory(categories, req.params.id, next).catch(
-        (e) => next(e)
-      );
+        if (categories !== null && categories !== undefined) {
+          const itemCounts = categories.map((category) => {
+            return category.itemIds.length;
+          });
 
-      if (category && category.items.length > 0) {
-        const e = new Error(
-          "Cannot delete category, category still contains items"
-        );
-        res.render("category_detail", {
-          title: category.name,
-          category,
-          error: e,
-        });
-        return;
+          res.render("category_list", {
+            title: "Category List",
+            categories,
+            itemCounts,
+          });
+        }
+        break;
       }
+      case "create": {
+        res.render("category_create", { title: "Category create" });
+        break;
+      }
+      case "update": {
+        const category = await getCategory(req.params.id, next);
 
-      res.render("category_delete", { title: "Delete Category" });
-      break;
+        if (category !== null && category !== undefined) {
+          res.render("category_create", {
+            title: "Category Update",
+            category,
+          });
+        }
+        break;
+      }
+      case "delete": {
+        const category = await getCategory(req.params.id, next);
+
+        if (category && category.items.length > 0) {
+          const e = new Error("Category still contains items");
+          res.render("category_detail", {
+            title: category.name,
+            category,
+            error: e,
+          });
+          return;
+        }
+        res.render("category_delete", { title: "Delete Category" });
+        break;
+      }
+      default:
     }
   }
 }

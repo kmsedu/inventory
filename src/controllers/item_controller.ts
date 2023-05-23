@@ -3,38 +3,70 @@ import { NextFunction, Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
+async function getAllItems(next: NextFunction) {
+  return await prisma.item.findMany().catch((e) => next(e));
+}
+
+async function getAllCategories(next: NextFunction) {
+  return await prisma.category.findMany().catch((e) => next(e));
+}
+
+async function getItem(id: string, next: NextFunction, categories?: boolean) {
+  if (!!categories) {
+    return await prisma.item
+      .findUnique({ where: { id }, include: { categories: true } })
+      .catch((e) => next(e));
+  }
+  return await prisma.item.findUnique({ where: { id } }).catch((e) => next(e));
+}
+
+async function getPage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  pageType: string
+) {
+  switch (pageType) {
+    case "index": {
+      const items = await getAllItems(next);
+      const categories = await getAllCategories(next);
+
+      res.render("index", { title: "Home Page", items, categories });
+      break;
+    }
+    case "list": {
+      const items = await getAllItems(next);
+
+      res.render("item_list", {
+        title: "Item List",
+        items,
+      });
+      break;
+    }
+    case "detail": {
+      const item = await getItem(req.params.id, next, true);
+
+      if (item !== null && item !== undefined) {
+        res.render("item_detail", {
+          title: item.name,
+          item,
+        });
+      }
+      break;
+    }
+    default:
+  }
+}
+
 const ItemController = {
   index: async function (req: Request, res: Response, next: NextFunction) {
-    const items = await prisma.item.findMany({}).catch((e) => next(e));
-    const categories = await prisma.category.findMany({}).catch((e) => next(e));
-
-    res.render("index", { title: "Home page", items, categories });
-  },
-  list: async function (req: Request, res: Response, next: NextFunction) {
-    const items = await prisma.item.findMany({}).catch((e) => next(e));
-
-    res.render("item_list", {
-      items,
-    });
+    await getPage(req, res, next, "index");
   },
   detail: async function (req: Request, res: Response, next: NextFunction) {
-    const item = await prisma.item
-      .findUnique({
-        where: {
-          id: req.params.id,
-        },
-        include: {
-          categories: true,
-        },
-      })
-      .catch((e) => next(e));
-
-    if (item && item !== null) {
-      res.render("item_detail", {
-        title: item.name,
-        item,
-      });
-    }
+    await getPage(req, res, next, "detail");
+  },
+  list: async function (req: Request, res: Response, next: NextFunction) {
+    await getPage(req, res, next, "list");
   },
   create: async function (req: Request, res: Response, next: NextFunction) {
     res.render("item_create", { title: "Item create" });
