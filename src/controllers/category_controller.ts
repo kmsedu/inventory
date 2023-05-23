@@ -31,12 +31,6 @@ async function getPage(
     })
     .catch((e) => next(e));
 
-  if (!categories || categories.length === 0) {
-    const e = new Error("No categories found in DB");
-    next(e);
-    return;
-  }
-
   switch (pageType) {
     case "detail": {
       const category = await getCategory(categories, req.params.id, next).catch(
