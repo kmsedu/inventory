@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 const prisma = new PrismaClient();
 
 const CategoryController = {
-  detail: async function(req: Request, res: Response, next: NextFunction) {
+  detail: async function (req: Request, res: Response, next: NextFunction) {
     const category = await prisma.category
       .findUnique({
         where: { id: req.params.id },
@@ -19,7 +19,7 @@ const CategoryController = {
       });
     }
   },
-  list: async function(req: Request, res: Response, next: NextFunction) {
+  list: async function (req: Request, res: Response, next: NextFunction) {
     const categories = await prisma.category.findMany().catch((e) => next(e));
 
     if (categories !== null && categories) {
@@ -34,22 +34,22 @@ const CategoryController = {
       });
     }
   },
-  create: async function(req: Request, res: Response, next: NextFunction) {
+  create: async function (req: Request, res: Response, next: NextFunction) {
     res.render("category_create", { title: "Category create" });
   },
-  update: async function(req: Request, res: Response, next: NextFunction) {
+  update: async function (req: Request, res: Response, next: NextFunction) {
     res.render("category_create", { title: "Category update" });
   },
-  delete: async function(req: Request, res: Response, next: NextFunction) {
+  delete: async function (req: Request, res: Response, next: NextFunction) {
     res.render("category_delete", { title: "Category delete" });
   },
-  createPost: async function(req: Request, res: Response, next: NextFunction) {
+  createPost: async function (req: Request, res: Response, next: NextFunction) {
     res.send("Category create POST");
   },
-  updatePost: async function(req: Request, res: Response, next: NextFunction) {
+  updatePost: async function (req: Request, res: Response, next: NextFunction) {
     res.send("Category update POST");
   },
-  deletePost: async function(req: Request, res: Response, next: NextFunction) {
+  deletePost: async function (req: Request, res: Response, next: NextFunction) {
     res.send("Category delete POST");
   },
 };
