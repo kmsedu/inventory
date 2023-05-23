@@ -15,3 +15,10 @@ block content
         td= item.description 
         td.price= item.price 
         td= item.id
+  if error
+    p.delete_error Can not delete category while items are still present.
+  p 
+    a(href="/category/" + category.id + "/update") Update Category
+  p 
+    a(href="/category/" + category.id + "/delete") Delete Category 
+
