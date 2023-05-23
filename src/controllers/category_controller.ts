@@ -38,7 +38,18 @@ const CategoryController = {
     res.render("category_create", { title: "Category create" });
   },
   update: async function (req: Request, res: Response, next: NextFunction) {
-    res.render("category_create", { title: "Category update" });
+    const category = await prisma.category
+      .findUnique({
+        where: { id: req.params.id },
+      })
+      .catch((e) => next(e));
+
+    if (category !== null && category) {
+      res.render("category_create", {
+        title: "Category Update",
+        category,
+      });
+    }
   },
   delete: async function (req: Request, res: Response, next: NextFunction) {
     res.render("category_delete", { title: "Category delete" });

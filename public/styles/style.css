@@ -10,6 +10,7 @@ body {
 
 main {
   flex: 8;
+  padding: 0 1rem;
 }
 
 nav {
@@ -142,4 +143,46 @@ p.blurb {
   min-width: 450px;
   line-height: 1.5;
   padding: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 450px;
+}
+
+form label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+form input,
+form textarea {
+  border: 1px solid lightgray;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  flex: 3;
+}
+
+form span {
+  flex: 1;
+}
+
+form input:focus {
+  box-shadow: 0 0 6px lightblue;
+}
+
+form textarea:focus {
+  box-shadow: 0 0 6px lightblue;
+}
+
+form button {
+  background: #333;
+  color: white;
+  padding: 1rem;
+  border-radius: 3px;
+  align-self: center;
 }
