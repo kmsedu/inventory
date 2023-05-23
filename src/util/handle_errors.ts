@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 
 function handleErrors(
@@ -7,25 +6,14 @@ function handleErrors(
   res: Response,
   next: NextFunction
 ) {
-  if (error.code && error.code.includes("PUG")) {
-    res.render("error", { title: "Pug compilation error", error });
-  }
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (error.code) {
-      case "P2023": {
-        console.error(error.message);
+  console.error(error);
 
-        const requestId = req.path.slice(req.path.lastIndexOf("/") + 1);
-        error.message = `Invalid ID: ${requestId} - Unable to get page information.`;
-
-        res.render("error", {
-          title: error.name,
-          error,
-        });
-      }
-    }
+  if (error.message && error.message === "Invalid URL") {
+    res.redirect("/404");
+    next();
   }
-  res.redirect("/404");
+
+  res.render("error", { title: "Error", error });
 }
 
 export { handleErrors };
