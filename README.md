@@ -10,7 +10,7 @@ _Inventory handling application for an imaginary store_
 - [x] Write controller templates for CRUD
 - [x] Make GET views
 - [x] Implement GET for each model
-- [ ] Write forms for create/update
+- [x] Write forms for create/update
 - [ ] Implement POST for each model
 - [ ] Implement image upload
 - [ ] Implement rudimentary auth state
