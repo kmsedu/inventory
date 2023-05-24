@@ -152,14 +152,14 @@ form {
   max-width: 450px;
 }
 
-form label {
+form label:not(fieldset > label) {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex: 1;
 }
 
-form input,
+form input:not(input[type="checkbox"]),
 form textarea {
   border: 1px solid lightgray;
   padding: 0.5rem 1rem;
@@ -185,4 +185,26 @@ form button {
   padding: 1rem;
   border-radius: 3px;
   align-self: center;
+}
+
+input[type="checkbox"] {
+  all: revert;
+}
+
+form fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+}
+
+fieldset label {
+  display: flex;
+  gap: 0.5rem;
+}
+
+fieldset span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
 }

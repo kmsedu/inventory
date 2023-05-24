@@ -11,3 +11,7 @@ block content
       div.category_container
         each category in item.categories 
           a(href="/category/" + category.id)= category.name
+  p 
+    a(href="/item/" + item.id + "/delete") Delete Item 
+  p 
+    a(href="/item/" + item.id + "/update") Update Item 

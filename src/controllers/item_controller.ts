@@ -54,6 +54,36 @@ async function getPage(
       }
       break;
     }
+    case "create": {
+      const categories = await getAllCategories(next);
+
+      res.render("item_create", {
+        title: "Create item",
+        categories,
+      });
+      break;
+    }
+    case "update": {
+      const categories = await getAllCategories(next);
+      const item = await getItem(req.params.id, next, true);
+
+      res.render("item_create", {
+        title: "Update item",
+        categories,
+        item,
+      });
+      break;
+    }
+    case "delete": {
+      const item = await getItem(req.params.id, next);
+
+      if (item !== null && item !== undefined) {
+        res.render("item_delete", {
+          title: `Delete item: ${item.name}`,
+          item,
+        });
+      }
+    }
     default:
   }
 }
@@ -69,13 +99,13 @@ const ItemController = {
     await getPage(req, res, next, "list");
   },
   create: async function (req: Request, res: Response, next: NextFunction) {
-    res.render("item_create", { title: "Item create" });
+    await getPage(req, res, next, "create");
   },
   update: async function (req: Request, res: Response, next: NextFunction) {
-    res.render("item_create", { title: "Item update" });
+    await getPage(req, res, next, "update");
   },
   delete: async function (req: Request, res: Response, next: NextFunction) {
-    res.render("item_delete", { title: "Confirm item deletion" });
+    await getPage(req, res, next, "delete");
   },
   createPost: async function (req: Request, res: Response, next: NextFunction) {
     res.send("Item create POST");
