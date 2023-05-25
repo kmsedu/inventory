@@ -7,8 +7,13 @@ const app = express();
 app.set("views", "./src/views/");
 app.set("view engine", "pug");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 app.use(express.static("public"));
+
 app.use(router);
+
 app.use(handleErrors);
 
 app.listen(8000, () => {
