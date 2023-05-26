@@ -1,5 +1,11 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
+import {
+  body,
+  validationResult,
+  type Result,
+  type ValidationError,
+} from "express-validator";
 
 const prisma = new PrismaClient();
 
@@ -19,7 +25,8 @@ async function getPage(
   req: Request,
   res: Response,
   next: NextFunction,
-  pageType: string
+  pageType: string,
+  validationErrors?: ValidationError[]
 ) {
   const categories = await prisma.category
     .findMany({
@@ -56,10 +63,36 @@ async function getPage(
         break;
       }
       case "create": {
-        res.render("category_create", { title: "Category create" });
+        if (validationErrors && validationErrors.length > 0) {
+        const newCategory = {
+          name: req.body.name,
+          description: req.body.description,
+        };
+
+        res.render("category_create", {
+          title: "Create category",
+          category: newCategory,
+          validationErrors,
+        });
+        return;
+        } else {
+          res.render("category_create", { title: "Category create" });
+        }
         break;
       }
       case "update": {
+        if (validationErrors && validationErrors.length > 0) {
+          const newCategory = {
+            name: req.body.name,
+            description: req.body.description,
+          }
+
+          res.render("category_create", {
+            title: "Update Category",
+            category: newCategory,
+            validationErrors,
+          })
+        }
         const category = await getCategory(req.params.id, next);
 
         if (category !== null && category !== undefined) {
@@ -82,7 +115,42 @@ async function getPage(
           });
           return;
         }
-        res.render("category_delete", { title: "Delete Category" });
+        res.render("category_delete", { title: "Delete Category", category });
+        break;
+      }
+      case "createPost": {
+        await prisma.category.create({ 
+          data: {
+            name: req.body.name,
+            description: req.body.description,
+          }
+        });
+
+        res.redirect("/categories"); 
+        break;
+      }
+      case "updatePost": {
+        await prisma.category.update({
+          where: {
+            id: req.params.id,
+          },
+          data: {
+            name: req.body.name,
+            description: req.body.description,
+          }
+        });
+
+        res.redirect("/categories");
+        break;
+      }
+      case "deletePost": {
+        await prisma.category.delete({
+          where: {
+            id: req.params.id,
+          }
+        }).catch((e) => next(e));
+
+        res.redirect("/categories");
         break;
       }
       default:
@@ -106,14 +174,38 @@ const CategoryController = {
   delete: async function (req: Request, res: Response, next: NextFunction) {
     await getPage(req, res, next, "delete");
   },
-  createPost: async function (req: Request, res: Response, next: NextFunction) {
-    res.send("Category create POST");
-  },
-  updatePost: async function (req: Request, res: Response, next: NextFunction) {
-    res.send("Category update POST");
-  },
+  createPost: [
+    body("name", "Name can not be empty").trim().notEmpty().escape(),
+    body("description", "Description can not be empty")
+      .trim()
+      .notEmpty()
+      .escape(),
+
+    async function (req: Request, res: Response, next: NextFunction) {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        await getPage(req, res, next, "create", errors.array());
+      } else {
+        await getPage(req, res, next, "createPost");
+      }
+    },
+  ],
+  updatePost: [
+    body("name", "Name can not be empty").trim().notEmpty().escape(),
+    body("description", "Description can not be empty").trim().notEmpty().escape(),
+
+    async function (req: Request, res: Response, next: NextFunction) {
+      const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        await getPage(req, res, next, "update", errors.array());
+      } else {
+        await getPage(req, res, next, "updatePost");
+      }
+    }
+  ],
   deletePost: async function (req: Request, res: Response, next: NextFunction) {
-    res.send("Category delete POST");
+    await getPage(req, res, next, "deletePost");
   },
 };
 

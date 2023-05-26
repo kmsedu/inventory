@@ -9,4 +9,7 @@ block content
     label(for="description")
       span Description: 
       textarea(name="description", id="description", rows="10")= category ? category.description : ""
+    if validationErrors 
+      each error in validationErrors
+        p= error.msg
     button Create

@@ -3,4 +3,5 @@ extends layout
 block content 
   h1 Confirm deletion
   p Are you sure you want to delete category #{category.name}
-  button.delete_button Delete
+  form(method="POST")
+    button.delete_button Delete
