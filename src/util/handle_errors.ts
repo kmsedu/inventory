@@ -9,6 +9,7 @@ function handleErrors(
   console.error(error);
 
   if (error.message && error.message === "Invalid URL") {
+    console.log(req.path);
     res.redirect("/404");
     next();
   }

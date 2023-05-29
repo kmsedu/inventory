@@ -2,20 +2,25 @@ extends layout
 
 block content 
   h1 Create Item
-  form(method="POST")
-    label(for="name")
-      span Name: 
-      input(type="text", name="name", id="name", required, value=item ? item.name : "")
-    label(for="description") 
-      span Description:
-      textarea(name="description", id="description", required, rows="10")= item ? item.description : ""
-    fieldset
-      each category in categories 
-        label(for=category.name)
-          input(type="checkbox", id=category.name, name=category.name, data-id=category.id, checked=item && item.categoryIds.includes(category.id))
-          span= category.name
-    label(for="price")
-      span Price:
-      input(type="text", name="price", id="price", required, value=item ? item.name : "")
-    button= item ? "Update" : "Create"
+  div.form-container
+    form(method="POST")
+      label(for="name")
+        span Name: 
+        input(type="text", name="name", id="name", required, value=item ? item.name : "")
+      label(for="description") 
+        span Description:
+        textarea(name="description", id="description", required, rows="10")= item ? item.description : ""
+      fieldset
+        each category in categories 
+          label(for=category.name)
+            input(type="checkbox", id=category.name, name=category.name, data-id=category.id, checked=item && item.categoryIds.includes(category.id))
+            span= category.name
+      label(for="price")
+        span Price:
+        input(type="text", name="price", id="price", required, value=item ? item.price : "")
+      button= item ? "Update" : "Create"
+    if errors
+      each error in errors 
+        p= error.msg
+    include image_upload 
 
