@@ -145,6 +145,15 @@ p.blurb {
   padding: 1rem;
 }
 
+.form-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.image_upload {
+  background: blue;
+}
+
 form {
   display: flex;
   flex-direction: column;
