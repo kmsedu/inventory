@@ -150,10 +150,6 @@ p.blurb {
   gap: 1rem;
 }
 
-.image_upload {
-  background: blue;
-}
-
 form {
   display: flex;
   flex-direction: column;

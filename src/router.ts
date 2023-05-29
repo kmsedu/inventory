@@ -1,7 +1,7 @@
 import express from "express";
 import { ItemController } from "./controllers/item_controller";
 import { CategoryController } from "./controllers/category_controller";
-import { handleErrors } from "./util/handle_errors";
+import { UploadController } from "./controllers/upload_controller";
 
 const router = express.Router();
 
