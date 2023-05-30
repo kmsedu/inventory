@@ -11,6 +11,6 @@ _Inventory handling application for an imaginary store_
 - [x] Make GET views
 - [x] Implement GET for each model
 - [x] Write forms for create/update
-- [ ] Implement POST for each model
-- [ ] Implement image upload
+- [x] Implement POST for each model
+- [x] Implement image upload
 - [ ] Implement rudimentary auth state
