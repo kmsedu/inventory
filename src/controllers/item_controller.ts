@@ -1,8 +1,13 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
-
+import validator from "validator";
+import { ObjectId } from "bson";
 const prisma = new PrismaClient();
+
+export const id = {
+  string: new ObjectId().toString(),
+};
 
 async function getAllItems(next: NextFunction) {
   return await prisma.item.findMany().catch((e) => next(e));
@@ -51,6 +56,7 @@ async function getPage(
 ) {
   switch (pageType) {
     case "index": {
+      id.string = new ObjectId().toString();
       const items = await getAllItems(next);
       const categories = await getAllCategories(next);
 
@@ -69,6 +75,10 @@ async function getPage(
     case "detail": {
       const item = await getItem(req.params.id, next, true);
 
+      if (item && item.description) {
+        item.description = validator.unescape(item.description);
+      }
+
       if (item !== null && item !== undefined) {
         res.render("item_detail", {
           title: item.name,
@@ -80,15 +90,24 @@ async function getPage(
     case "create": {
       const categories = await getAllCategories(next);
 
+      const newItem = {
+        id: id.string.toString(),
+      };
+
       res.render("item_create", {
         title: "Create item",
         categories,
+        item: newItem,
       });
       break;
     }
     case "update": {
       const categories = await getAllCategories(next);
       const item = await getItem(req.params.id, next, true);
+
+      if (item && item.description) {
+        item.description = validator.unescape(item.description);
+      }
 
       res.render("item_create", {
         title: "Update item",
@@ -140,17 +159,16 @@ const ItemController = {
 
     async function (req: Request, res: Response, next: NextFunction) {
       const formCategories = await getFormCategories(req);
-
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        console.log(formCategories.selectedCategories);
         const newItem = {
           name: req.body.name,
           description: req.body.description,
           price: req.body.price,
           categories: formCategories.selectedCategories,
           categoryIds: formCategories.selectedCategories.map((cat) => cat.id),
+          id: req.body.id,
         };
 
         res.render("item_create", {
@@ -166,9 +184,10 @@ const ItemController = {
             description: req.body.description,
             price: req.body.price,
             categoryIds: formCategories.selectedCategories.map((cat) => cat.id),
+            id: req.body.id,
           },
         });
-
+        id.string = new ObjectId().toString();
         res.redirect("/items");
       }
     },

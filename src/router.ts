@@ -32,6 +32,9 @@ router.post("/category/create", CategoryController.createPost);
 router.post("/category/:id/update", CategoryController.updatePost);
 router.post("/category/:id/delete", CategoryController.deletePost);
 
+// Upload route
+router.post("/upload", UploadController.post);
+
 // 404 Route
 router.get("/404", (req, res, next) => {
   const error = new Error("404 Not Found");

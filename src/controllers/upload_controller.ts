@@ -5,23 +5,9 @@ import express, {
 } from "express";
 import multer from "multer";
 
-const storage = multer.diskStorage({
-  filename: function (req, file, cb) {
-    if (!req.headers.referer) {
-      cb(null, "error.png");
-    } else {
-      const refUrl = new URL(req.headers.referer);
-      const id = refUrl.pathname.slice(6, refUrl.pathname.lastIndexOf("/"));
+import fs from "fs";
 
-      cb(null, `${id}.png`);
-    }
-  },
-  destination: function (req, file, cb) {
-    cb(null, "./public/images/");
-  },
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ dest: "public/images/" });
 const app = express();
 
 const UploadController = {
@@ -29,7 +15,18 @@ const UploadController = {
     "/upload",
     upload.single("image"),
     function (req: Request, res: Response, next: NextFunction) {
-      console.log(req.file?.filename);
+      if (req.file) {
+        fs.rename(
+          req.file.path,
+          `${req.file.destination}${req.body.id}.png`,
+          () => {}
+        );
+      }
+      if (req.headers.referer) {
+        res.redirect(req.headers.referer);
+      } else {
+        res.redirect("/");
+      }
     }
   ),
 };

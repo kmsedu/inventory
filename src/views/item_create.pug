@@ -4,20 +4,21 @@ block content
   h1 Create Item
   div.form-container
     form(method="POST")
+      input(type="hidden" name="id" value= item.id ? item.id : "")
       label(for="name")
         span Name: 
-        input(type="text", name="name", id="name", required, value=item ? item.name : "")
+        input(type="text", name="name", id="name", required, value=item.name ? item.name : "")
       label(for="description") 
         span Description:
-        textarea(name="description", id="description", required, rows="10")= item ? item.description : ""
+        textarea(name="description", id="description", required, rows="10")= item.description ? item.description : ""
       fieldset
         each category in categories 
           label(for=category.name)
-            input(type="checkbox", id=category.name, name=category.name, data-id=category.id, checked=item && item.categoryIds.includes(category.id))
+            input(type="checkbox", id=category.name, name=category.name, data-id=category.id, checked=item.categoryIds && item.categoryIds.includes(category.id))
             span= category.name
       label(for="price")
         span Price:
-        input(type="text", name="price", id="price", required, value=item ? item.price : "")
+        input(type="text", name="price", id="price", required, value=item.price ? item.price : "")
       button= item ? "Update" : "Create"
       if errors
         each error in errors 

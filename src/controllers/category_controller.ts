@@ -3,9 +3,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   body,
   validationResult,
-  type Result,
   type ValidationError,
 } from "express-validator";
+import { id } from "./item_controller";
+import { ObjectId } from "bson";
 
 const prisma = new PrismaClient();
 
@@ -63,18 +64,19 @@ async function getPage(
         break;
       }
       case "create": {
+        id.string = new ObjectId().toString();
         if (validationErrors && validationErrors.length > 0) {
-        const newCategory = {
-          name: req.body.name,
-          description: req.body.description,
-        };
+          const newCategory = {
+            name: req.body.name,
+            description: req.body.description,
+          };
 
-        res.render("category_create", {
-          title: "Create category",
-          category: newCategory,
-          validationErrors,
-        });
-        return;
+          res.render("category_create", {
+            title: "Create category",
+            category: newCategory,
+            validationErrors,
+          });
+          return;
         } else {
           res.render("category_create", { title: "Category create" });
         }
@@ -85,13 +87,13 @@ async function getPage(
           const newCategory = {
             name: req.body.name,
             description: req.body.description,
-          }
+          };
 
           res.render("category_create", {
             title: "Update Category",
             category: newCategory,
             validationErrors,
-          })
+          });
         }
         const category = await getCategory(req.params.id, next);
 
@@ -119,14 +121,14 @@ async function getPage(
         break;
       }
       case "createPost": {
-        await prisma.category.create({ 
+        await prisma.category.create({
           data: {
             name: req.body.name,
             description: req.body.description,
-          }
+          },
         });
 
-        res.redirect("/categories"); 
+        res.redirect("/categories");
         break;
       }
       case "updatePost": {
@@ -137,18 +139,20 @@ async function getPage(
           data: {
             name: req.body.name,
             description: req.body.description,
-          }
+          },
         });
 
         res.redirect("/categories");
         break;
       }
       case "deletePost": {
-        await prisma.category.delete({
-          where: {
-            id: req.params.id,
-          }
-        }).catch((e) => next(e));
+        await prisma.category
+          .delete({
+            where: {
+              id: req.params.id,
+            },
+          })
+          .catch((e) => next(e));
 
         res.redirect("/categories");
         break;
@@ -192,17 +196,20 @@ const CategoryController = {
   ],
   updatePost: [
     body("name", "Name can not be empty").trim().notEmpty().escape(),
-    body("description", "Description can not be empty").trim().notEmpty().escape(),
+    body("description", "Description can not be empty")
+      .trim()
+      .notEmpty()
+      .escape(),
 
     async function (req: Request, res: Response, next: NextFunction) {
       const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
+      if (!errors.isEmpty()) {
         await getPage(req, res, next, "update", errors.array());
       } else {
         await getPage(req, res, next, "updatePost");
       }
-    }
+    },
   ],
   deletePost: async function (req: Request, res: Response, next: NextFunction) {
     await getPage(req, res, next, "deletePost");
