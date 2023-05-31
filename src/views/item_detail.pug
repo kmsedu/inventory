@@ -5,7 +5,7 @@ block content
   div.item_container
     section 
       p.blurb= item.description
-      p.price= item.price
+      p.price= item.price.toFixed(2)
     section.display
       img(src="/images/" + item.id + ".png", alt=item.name, height="auto", width="200px")
       div.category_container

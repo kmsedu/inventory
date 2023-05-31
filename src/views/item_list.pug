@@ -10,8 +10,8 @@ block content
       th ID
     each item in items 
       tr 
-        td 
+        td.table_name 
           a(href="/item/" + item.id)= item.name 
-        td= item.description 
-        td.price= item.price 
-        td= item.id
+        td.table_description= item.description 
+        td.price= item.price.toFixed(2) 
+        td.table_id= item.id

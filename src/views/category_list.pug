@@ -10,7 +10,7 @@ block content
     each category, index in categories 
       div.category_list_item
         tr
-          td
+          td.table_name
             a(href="/category/" + category.id)= category.name
-          td= category.description
+          td.table_description= category.description
           td= itemCounts[index] 

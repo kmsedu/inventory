@@ -13,10 +13,10 @@ block content
           th Price 
         each item of items 
           tr
-            td
+            td.table_name
               a(href="/item/" + item.id)= item.name
-            td= item.description
-            td.price= item.price
+            td.table_description= item.description
+            td.price= item.price.toFixed(2)
     div.overview-categories
       a(href="/categories/")
         h2 Categories
@@ -26,6 +26,6 @@ block content
           th Description
         each category of categories
           tr 
-            td
+            td.table_name
               a(href="/category/" + category.id)= category.name
-            td= category.description
+            td.table_description= category.description

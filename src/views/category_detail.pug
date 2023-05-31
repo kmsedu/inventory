@@ -2,6 +2,7 @@ extends layout
 
 block content 
   h1= category.name
+  p.table_description= category.description
   table 
     tr 
       th Item 
@@ -10,11 +11,11 @@ block content
       th ID
     each item in category.items
       tr 
-        td
+        td.table_name
           a(href="/item/" + item.id)= item.name  
-        td= item.description 
+        td.table_description= item.description 
         td.price= item.price 
-        td= item.id
+        td.table_id= item.id
   if error
     p.delete_error Can not delete category while items are still present.
   p 

@@ -2,15 +2,39 @@
 /*   border: 1px solid red; */
 /* } */
 
+:root {
+  --jelly-bean-50: #effafc;
+  --jelly-bean-100: #d7f1f6;
+  --jelly-bean-200: #b3e3ee;
+  --jelly-bean-300: #7fcee1;
+  --jelly-bean-400: #43afcd;
+  --jelly-bean-500: #2792b3;
+  --jelly-bean-600: #216e8c;
+  --jelly-bean-700: #23607b;
+  --jelly-bean-800: #255065;
+  --jelly-bean-900: #224357;
+  --jelly-bean-950: #122c3a;
+  --lightning-yellow-50: #fefce8;
+  --lightning-yellow-100: #fef8c3;
+  --lightning-yellow-200: #feee8a;
+  --lightning-yellow-300: #fddd47;
+  --lightning-yellow-400: #fac814;
+  --lightning-yellow-500: #eaaf08;
+  --lightning-yellow-600: #ca8704;
+  --lightning-yellow-700: #a15f07;
+  --lightning-yellow-800: #854b0e;
+  --lightning-yellow-900: #713d12;
+  --lightning-yellow-950: #421f06;
+}
+
 body {
   display: flex;
-  font-family: sans-serif;
+  font-family: "Mukta", sans-serif;
   min-height: 100vh;
 }
 
 main {
   flex: 8;
-  padding: 0 1rem;
 }
 
 nav {
@@ -19,24 +43,83 @@ nav {
   flex-direction: column;
 }
 
+nav > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+nav div > a {
+  padding: 1rem;
+  transition: background 0.3s ease-in-out;
+}
+
+nav div > a:hover {
+  color: var(--jelly-bean-100);
+  background: var(--jelly-bean-800);
+}
+
+nav.sidebar > a:first-child {
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: "Zilla Slab";
+  padding: 1rem;
+  transition: background 0.3s ease-in-out;
+  text-align: center;
+}
+
+nav.sidebar > a:first-child:hover {
+  background: var(--lightning-yellow-600);
+}
+
+nav.sidebar div.secondary_links {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
 .sidebar {
-  border-right: 1px solid lightgray;
+  background-color: var(--jelly-bean-900);
+  color: white;
+  font-family: "Mukta", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 30%);
+  position: relative;
+  z-index: 20;
 }
 
 h1 {
   font-size: 2rem;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  font-family: "Zilla Slab";
+  font-weight: 500;
+  background: var(--jelly-bean-900);
+  color: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 30%);
+  position: relative;
+  z-index: 10;
 }
 
-main h2 {
-  background: #333;
-  color: white;
-  border: 1px solid lightgray;
+.overview-items th {
+  border-right: 1px solid var(--jelly-bean-700);
+}
+
+.overview-items table td {
+  border-right: 1px solid lightgray;
 }
 
 h2 {
   font-size: 1.5rem;
   padding: 1rem;
+  background: var(--jelly-bean-950);
+  color: white;
+  font-family: "Zilla Slab";
+  transition: background 0.3s ease-in-out;
+}
+
+h2:hover {
+  background: var(--lightning-yellow-600);
 }
 
 .overview {
@@ -50,19 +133,52 @@ h2 {
   align-content: start;
 }
 
-th {
+tr > th {
   font-weight: bold;
-  background: #eee;
+  background: var(--jelly-bean-600);
+  color: white;
+  cursor: default;
+}
+
+th:not(:last-of-type) {
+  border-right: 1px solid var(--jelly-bean-700);
+}
+
+td:not(:last-of-type) {
+  border-right: 1px solid lightgray;
 }
 
 th,
 td {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.5rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 0px;
-  border: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  position: relative;
+  z-index: 0;
+  color: rgba(0, 0, 0, 70%);
+}
+
+td.table_name {
+  font-weight: 500;
+  transition: background 0.3s ease-in-out;
+  background: rgba(0, 0, 0, 5%);
+  color: rgba(0, 0, 0, 90%);
+}
+
+td.table_name:hover {
+  background: rgba(0, 0, 0, 15%);
+}
+
+.table_description {
+  color: rgba(0, 0, 0, 60%);
+  font-style: italic;
+}
+
+main > p.table_description {
+  padding: 2rem;
 }
 
 td:has(a) {
@@ -78,15 +194,6 @@ td > a {
   content: "$";
 }
 
-nav.sidebar > a {
-  padding: 1rem;
-}
-
-nav.sidebar :first-child {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
 table {
   table-layout: fixed;
   width: 100%;
@@ -95,6 +202,7 @@ table {
 .item_container {
   display: flex;
   gap: 2rem;
+  padding: 1rem;
 }
 
 .item_container :first-child {
@@ -108,6 +216,17 @@ section.display {
   flex-direction: column;
   justify-content: space-evenly;
   max-width: 260px;
+}
+
+tr > td.price {
+  color: rgba(0, 0, 0, 90%);
+  font-weight: 500;
+}
+
+tr > td.table_id {
+  color: rgba(0, 0, 0, 70%);
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
 p.price {
@@ -143,6 +262,7 @@ p.blurb {
   min-width: 450px;
   line-height: 1.5;
   padding: 1rem;
+  color: rgba(0, 0, 0, 70%);
 }
 
 .form-container {

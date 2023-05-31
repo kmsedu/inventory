@@ -13,4 +13,4 @@ _Inventory handling application for an imaginary store_
 - [x] Write forms for create/update
 - [x] Implement POST for each model
 - [x] Implement image upload
-- [ ] Implement rudimentary auth state
+- [x] Implement rudimentary auth state
