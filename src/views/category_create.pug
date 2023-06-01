@@ -1,15 +1,16 @@
 extends layout 
 
 block content 
-  h1= title 
-  form(method="POST")
+  .page_heading
+    h1= title 
+  form(method="POST").category_form
     label(for="name") 
       span Name:
       input(type="text" name="name" id="name" value=(category ? category.name : "") required)
     label(for="description")
       span Description: 
-      textarea(name="description", id="description", rows="10")= category ? category.description : ""
+      textarea(name="description", id="description", rows="10", required)= category ? category.description : ""
     if validationErrors 
       each error in validationErrors
-        p= error.msg
-    button Create
+        p.delete_error= error.msg
+    button Submit

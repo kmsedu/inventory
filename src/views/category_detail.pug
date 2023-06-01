@@ -1,8 +1,17 @@
 extends layout 
 
 block content 
-  h1= category.name
-  p.table_description= category.description
+  .page_heading
+    h1= "Category: " + category.name
+    .toolbox 
+      a(href="/category/" + category.id + "/delete")
+        i.gg-trash
+        span Delete
+      a(href="/category/" + category.id + "/update")
+        i.gg-edit-markup
+        span Update
+  .description
+    p= category.description
   table 
     tr 
       th Item 
@@ -14,12 +23,7 @@ block content
         td.table_name
           a(href="/item/" + item.id)= item.name  
         td.table_description= item.description 
-        td.price= item.price 
+        td.price= item.price.toFixed(2) 
         td.table_id= item.id
   if error
     p.delete_error Can not delete category while items are still present.
-  p 
-    a(href="/category/" + category.id + "/update") Update Category
-  p 
-    a(href="/category/" + category.id + "/delete") Delete Category 
-

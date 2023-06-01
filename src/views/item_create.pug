@@ -1,7 +1,8 @@
 extends layout 
 
 block content 
-  h1 Create Item
+  .page_heading
+    h1 Create Item
   div.form-container
     form(method="POST")
       input(type="hidden" name="id" value= item.id ? item.id : "")
@@ -19,7 +20,7 @@ block content
       label(for="price")
         span Price:
         input(type="text", name="price", id="price", required, value=item.price ? item.price : "")
-      button= item ? "Update" : "Create"
+      button Submit 
       if errors
         each error in errors 
           p= error.msg

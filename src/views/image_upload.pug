@@ -1,6 +1,6 @@
 form(action="/upload", method="post", enctype="multipart/form-data").image_upload
   if item
     img(src="/images/" + item.id + ".png", alt=item.name, onerror="this.style.display='none'")
-  input(type="file" name="image")
   input(type="hidden" value=item.id name="id")
+  input(type="file" name="image" id="image_upload")
   button Upload

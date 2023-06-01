@@ -1,8 +1,9 @@
 extends layout 
 
 block content 
-  h1 Confirm deletion
-  p Are you sure you want to delete item #{item.name}?
+  .page_heading
+    h1 Confirm deletion
+  p.delete_message Are you sure you want to delete item #{item.name}?
   form(method="POST")
     button.delete_button Delete
   
