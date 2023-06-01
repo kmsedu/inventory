@@ -6,12 +6,10 @@ function handleErrors(
   res: Response,
   next: NextFunction
 ) {
-  console.error(error);
-
   if (error.message && error.message === "Invalid URL") {
-    console.log(req.path);
     res.redirect("/404");
     next();
+    return;
   }
 
   res.render("error", { title: "Error", error });

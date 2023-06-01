@@ -31,7 +31,12 @@ async function getFormCategories(req: Request) {
   const selectedCategories = [];
 
   for (const key of Object.keys(req.body)) {
-    if (key !== "name" && key !== "description" && key !== "price") {
+    if (
+      key !== "name" &&
+      key !== "description" &&
+      key !== "price" &&
+      key !== "id"
+    ) {
       formCategories.push(key);
     }
   }
@@ -46,6 +51,34 @@ async function getFormCategories(req: Request) {
   }
 
   return { formCategories, selectedCategories };
+}
+
+async function cleanCategories(itemId: string): Promise<void> {
+  const categoriesToClean = await prisma.category.findMany({
+    where: {
+      itemIds: {
+        hasSome: itemId,
+      },
+    },
+  });
+
+  const cleanCategories = categoriesToClean.map((cat) => {
+    cat.itemIds = cat.itemIds.filter((id) => {
+      return id !== itemId;
+    });
+    return cat;
+  });
+
+  for (const cleanCategory of cleanCategories) {
+    await prisma.category.update({
+      where: {
+        id: cleanCategory.id,
+      },
+      data: {
+        itemIds: cleanCategory.itemIds,
+      },
+    });
+  }
 }
 
 async function getPage(
@@ -178,15 +211,28 @@ const ItemController = {
           errors: errors.array(),
         });
       } else {
+        const categoryIds = formCategories.selectedCategories.map(
+          (cat) => cat.id
+        );
+        const connectIds = categoryIds.map((id) => {
+          return { id };
+        });
+
+        console.log(connectIds);
+
         await prisma.item.create({
           data: {
             name: req.body.name,
             description: req.body.description,
             price: req.body.price,
-            categoryIds: formCategories.selectedCategories.map((cat) => cat.id),
+            categoryIds,
+            categories: {
+              connect: connectIds,
+            },
             id: req.body.id,
           },
         });
+
         id.string = new ObjectId().toString();
         res.redirect("/items");
       }
@@ -219,6 +265,12 @@ const ItemController = {
           errors: errors.array(),
         });
       } else {
+        const categoryIds = formCategories.selectedCategories.map((cat) => {
+          return cat.id;
+        });
+
+        await cleanCategories(req.params.id);
+
         await prisma.item.update({
           where: {
             id: req.params.id,
@@ -227,7 +279,21 @@ const ItemController = {
             name: req.body.name,
             description: req.body.description,
             price: req.body.price,
-            categoryIds: formCategories.selectedCategories.map((cat) => cat.id),
+            categoryIds: categoryIds,
+            categories: {
+              updateMany: {
+                where: {
+                  id: {
+                    in: categoryIds,
+                  },
+                },
+                data: {
+                  itemIds: {
+                    push: req.params.id,
+                  },
+                },
+              },
+            },
           },
         });
 
@@ -236,6 +302,7 @@ const ItemController = {
     },
   ],
   deletePost: async function (req: Request, res: Response, next: NextFunction) {
+    await cleanCategories(req.params.id);
     await prisma.item.delete({ where: { id: req.params.id } });
 
     res.redirect("/items");

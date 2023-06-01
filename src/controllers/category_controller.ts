@@ -7,6 +7,7 @@ import {
 } from "express-validator";
 import { id } from "./item_controller";
 import { ObjectId } from "bson";
+import validator from "validator";
 
 const prisma = new PrismaClient();
 
@@ -43,7 +44,11 @@ async function getPage(
         const category = await getCategory(req.params.id, next);
 
         if (category !== null && category !== undefined) {
-          res.render("category_detail", { title: category.name, category });
+          category.description = validator.unescape(category.description);
+          res.render("category_detail", {
+            title: category.name,
+            category,
+          });
         }
         break;
       }
@@ -51,6 +56,9 @@ async function getPage(
         const categories = await getAllCategories(next);
 
         if (categories !== null && categories !== undefined) {
+          for (const category of categories) {
+            category.description = validator.unescape(category.description);
+          }
           const itemCounts = categories.map((category) => {
             return category.itemIds.length;
           });
